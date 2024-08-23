@@ -4,6 +4,7 @@ from pydrive2.auth import GoogleAuth
 from pydrive2.files import GoogleDriveFile
 
 from drivepath.drive_path import DrivePath
+from drivepath.query import Expression
 
 
 class Drive:
@@ -39,13 +40,30 @@ class Drive:
 
         auth.SaveCredentialsFile(credentials_path)
 
-    def get_file(self, file_id: str) -> DrivePath:
-        file_obj = self._drive.CreateFile({'id': file_id})
-        return DrivePath(file_obj)
+    def get_path(self, file_id: str) -> DrivePath:
+        file_obj = self._drive.CreateFile({"id": file_id})
+        return self._make_path(file_obj)
 
     def get_root(self) -> DrivePath:
-        return DrivePath(self._drive.CreateFile({'id': 'root'}))
+        return self.get_path("root")
 
-    def query(self, query: str) -> Iterator[DrivePath]:
-        iterator =  self._drive.ListFile({'q': query}).GetList()
-        return map(DrivePath, iterator)
+    def query(self, query: str | Expression) -> Iterator[DrivePath]:
+        iterator = self._drive.ListFile({"q": str(query)}).GetList()
+        return map(self._make_path, iterator)
+
+    def _make_path(self, file_obj: GoogleDriveFile) -> DrivePath:
+        return DrivePath(self, file_obj)
+
+    def create_file(self, parent_id: str, title: str, content: str | None = None):
+        file = self._drive.CreateFile({"title": title, "parents": [{"id": parent_id}]})
+        if content:
+            file.SetContentString(content)
+        file.Upload()
+        return self._make_path(file)
+
+    def create_folder(self, parent_id: str, title: str):
+        folder = self._drive.CreateFile(
+            {"title": title, "parents": [{"id": parent_id}], "mimeType": "application/vnd.google-apps.folder"}
+        )
+        folder.Upload()
+        return self._make_path(folder)
