@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "drivepath"
+version = "0.1.0"
+description = ""
+authors = ["lifecodeof"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pydrive2 = "^1.20.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

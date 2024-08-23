@@ -1,0 +1,113 @@
+from typing import TypedDict, List, Optional
+
+class Picture(TypedDict):
+    url: str
+
+class User(TypedDict):
+    displayName: str
+    kind: str
+    isAuthenticatedUser: bool
+    permissionId: str
+    emailAddress: str
+    picture: Picture
+
+class Permission(TypedDict):
+    id: str
+    type: str
+    role: str
+    kind: str
+    selfLink: str
+    etag: str
+    pendingOwner: bool
+    name: Optional[str]
+    photoLink: Optional[str]
+    emailAddress: Optional[str]
+    domain: Optional[str]
+    deleted: Optional[bool]
+
+class Labels(TypedDict):
+    viewed: bool
+    restricted: bool
+    starred: bool
+    hidden: bool
+    trashed: bool
+    modified: bool
+
+class Capabilities(TypedDict):
+    canChangeRestrictedDownload: bool
+    canEdit: bool
+    canCopy: bool
+    canComment: bool
+    canAddChildren: bool
+    canDelete: bool
+    canDownload: bool
+    canListChildren: bool
+    canRemoveChildren: bool
+    canRename: bool
+    canTrash: bool
+    canReadRevisions: bool
+    canChangeCopyRequiresWriterPermission: bool
+    canMoveItemIntoTeamDrive: bool
+    canUntrash: bool
+    canModifyContent: bool
+    canMoveItemOutOfDrive: bool
+    canAddMyDriveParent: bool
+    canRemoveMyDriveParent: bool
+    canMoveItemWithinDrive: bool
+    canShare: bool
+    canMoveChildrenWithinDrive: bool
+    canModifyContentRestriction: bool
+    canChangeSecurityUpdateEnabled: bool
+    canAcceptOwnership: bool
+    canReadLabels: bool
+    canModifyLabels: bool
+    canModifyEditorContentRestriction: bool
+    canModifyOwnerContentRestriction: bool
+    canRemoveContentRestriction: bool
+
+class LinkShareMetadata(TypedDict):
+    securityUpdateEligible: bool
+    securityUpdateEnabled: bool
+
+class GoogleDriveFileMetadata(TypedDict):
+    id: str
+    kind: str
+    userPermission: Permission
+    selfLink: str
+    ownerNames: List[str]
+    lastModifyingUserName: str
+    editable: bool
+    writersCanShare: bool
+    mimeType: str
+    parents: List
+    appDataContents: bool
+    iconLink: str
+    shared: bool
+    lastModifyingUser: User
+    owners: List[User]
+    copyable: bool
+    etag: str
+    alternateLink: str
+    embedLink: str
+    copyRequiresWriterPermission: bool
+    permissions: List[Permission]
+    hasThumbnail: bool
+    spaces: List[str]
+    folderColorRgb: str
+    title: str
+    labels: Labels
+    explicitlyTrashed: bool
+    createdDate: str
+    modifiedDate: str
+    markedViewedByMeDate: str
+    quotaBytesUsed: str
+    version: str
+    ownedByMe: bool
+    canComment: bool
+    shareable: bool
+    isAppAuthorized: bool
+    capabilities: Capabilities
+    canReadRevisions: bool
+    thumbnailVersion: str
+    permissionIds: List[str]
+    linkShareMetadata: LinkShareMetadata
