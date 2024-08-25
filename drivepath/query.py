@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import TYPE_CHECKING, Literal, Self, overload
+from typing import TYPE_CHECKING, Literal, overload
 
 if TYPE_CHECKING:
     from drivepath.drive import Drive

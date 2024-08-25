@@ -1,6 +1,6 @@
-from .drive_path import DrivePath
-from .drive import Drive
-from .exceptions import PathNotFoundException
+from drivepath.drive_path import DrivePath
+from drivepath.drive import Drive
+from drivepath.exceptions import PathNotFoundException
 
 __all__ = [
     "DrivePath",
