@@ -1,17 +1,19 @@
-from typing import cast
+from typing import TYPE_CHECKING, cast
 from pydrive2.files import GoogleDriveFile
 
-from drivepath.drive import Drive
 from drivepath.exceptions import PathNotFoundException
 from drivepath.metadata_types import GoogleDriveFileMetadata
 from drivepath.query import Expression, q
 
+if TYPE_CHECKING:
+    from drivepath.drive import Drive
+
 
 class DrivePath:
-    _drive: Drive
+    _drive: "Drive"
     _obj: GoogleDriveFile
 
-    def __init__(self, drive: Drive, file_object: GoogleDriveFile):
+    def __init__(self, drive: "Drive", file_object: GoogleDriveFile):
         self._drive = drive
         self._obj = file_object
 
@@ -20,6 +22,12 @@ class DrivePath:
 
     @property
     def metadata(self) -> GoogleDriveFileMetadata:
+        """
+        Fetches the metadata of the Google Drive file.
+
+        Returns:
+            GoogleDriveFileMetadata: The metadata of the Google Drive file as a dictionary.
+        """
         if self._obj.metadata is None or len(self._obj.metadata) == 0:
             self._obj.FetchMetadata(fetch_all=True)
 
@@ -30,7 +38,16 @@ class DrivePath:
             yield self._make_path(file)
 
     def query(self, query: Expression):
-        """Executes a query on direct children of this path"""
+        """
+        Executes a query on direct children of this path.
+
+        Parameters:
+            query (Expression): use `drivepath.query.q` to create a query.
+
+        Returns:
+            Iterator[DrivePath]: An iterator of DrivePath objects that satisfy the query.
+        """
+
         return (q(self.id, "in", "parents") & query).execute(self._drive)
 
     def get_child(self, child_title: str):
@@ -66,6 +83,9 @@ class DrivePath:
                     created_folder = True
 
         return current_path
+
+    def copy(self, target: "DrivePath"):
+        return self._obj.Copy(target._obj)
 
     # Frequently used metadata properties
     @property

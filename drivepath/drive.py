@@ -1,3 +1,4 @@
+import os
 from typing import Iterator, Self
 from pydrive2.drive import GoogleDrive
 from pydrive2.auth import GoogleAuth
@@ -26,7 +27,10 @@ class Drive:
         """
 
         auth = GoogleAuth()
-        auth.LoadCredentialsFile(credentials_path)
+
+        if os.path.exists(credentials_path):
+            auth.LoadCredentialsFile(credentials_path)
+
         if not auth.credentials or auth.access_token_expired:
             auth.LocalWebserverAuth()
             auth.SaveCredentialsFile(credentials_path)

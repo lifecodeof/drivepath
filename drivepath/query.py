@@ -1,7 +1,8 @@
 from abc import ABC
-from typing import Literal, Self, overload
+from typing import TYPE_CHECKING, Literal, Self, overload
 
-from drivepath.drive import Drive
+if TYPE_CHECKING:
+    from drivepath.drive import Drive
 
 ComparisonOperator = Literal["=", "!=", ">", "<", ">=", "<=", "in"]
 
@@ -31,7 +32,7 @@ class Expression(ABC):
     def __invert__(self):
         return NotExpression(self)
 
-    def execute(self, drive: Drive):
+    def execute(self, drive: "Drive"):
         return drive.query(self)
 
 
@@ -54,7 +55,7 @@ class ComparisonExpression(Expression):
         else:
             value = self._quote(value)
 
-        return f"{self.term} {self.operator} {value}"
+        return f"{term} {self.operator} {value}"
 
 
 LogicalOperator = Literal["and", "or"]
@@ -71,7 +72,7 @@ class LogicalExpression(Expression):
         self.right = right
 
     def to_query(self) -> str:
-        return f"({self.left} {self.operator} {self.right})"
+        return f"({self.left}) {self.operator} ({self.right})"
 
 
 class NotExpression(Expression):
